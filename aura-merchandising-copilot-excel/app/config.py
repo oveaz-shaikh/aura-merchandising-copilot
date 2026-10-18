@@ -1,0 +1,18 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
+APP_ENV=os.getenv("APP_ENV","development")
+EXCEL_FILE=os.getenv("EXCEL_FILE","./data/aura_retail_data.xlsx")
+LLM_PROVIDER=os.getenv("LLM_PROVIDER","groq").strip().lower()
+GROQ_API_KEY=os.getenv("GROQ_API_KEY","")
+GROQ_MODEL=os.getenv("GROQ_MODEL","openai/gpt-oss-120b")
+GEMINI_API_KEY=os.getenv("GEMINI_API_KEY","")
+GEMINI_MODEL=os.getenv("GEMINI_MODEL","gemini-2.5-flash")
+GEMINI_EMBEDDING_MODEL=os.getenv("GEMINI_EMBEDDING_MODEL","gemini-embedding-001")
+LANGFUSE_PUBLIC_KEY=os.getenv("LANGFUSE_PUBLIC_KEY","")
+LANGFUSE_SECRET_KEY=os.getenv("LANGFUSE_SECRET_KEY","")
+LANGFUSE_BASE_URL=os.getenv("LANGFUSE_BASE_URL","https://cloud.langfuse.com")
+MAX_CHAT_CHARS=int(os.getenv("MAX_CHAT_CHARS","1500"))
+DEFAULT_MIN_MARGIN_PERCENT=float(os.getenv("MIN_MARGIN_PERCENT","20"))
+DEFAULT_MAX_DISCOUNT_PERCENT=float(os.getenv("MAX_DISCOUNT_PERCENT","30"))
+if LLM_PROVIDER not in {"groq","gemini"}: raise ValueError("LLM_PROVIDER must be 'groq' or 'gemini'. Only Groq and Gemini are supported.")

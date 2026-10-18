@@ -1,0 +1,30 @@
+AURA MERCHANDISING COPILOT — FORECAST REFINEMENT
+
+I inspected the latest uploaded project and updated the forecast engine.
+
+What changed:
+- Forecasts retain fractional expected demand internally rather than rounding every day to an integer.
+  This helps avoid recursive rounding producing a flat forecast of exactly 1 unit every day.
+- Added a recent-28-day-average benchmark to the chronological holdout evaluation.
+- Added explicit model-vs-baseline metrics and caveats.
+- Added a test for the recent-average benchmark.
+
+Validation:
+- All 5 project tests pass in the packaged project.
+- For AE-POLO-001, the 30-day forecast from this data is about 31.6 expected units (about 1.05/day).
+- On the 18-day holdout, model MAE is 0.719; seasonal-naive MAE is 1.056; recent-28-day-average MAE is 0.756.
+- Model WAPE is 58.81%, so error is still high. Treat as a prototype, not a production forecast.
+
+Apply:
+1. Back up your current project folder.
+2. Extract this ZIP to a new folder (recommended) or copy the changed files into your current project.
+3. Keep your own .env file and API keys; this ZIP intentionally does not include .env or .venv.
+4. Activate your existing virtual environment. Required packages are listed in requirements.txt.
+5. Start: uvicorn app.main:app --reload
+6. Test GET /api/forecast?sku=AE-POLO-001&horizon_days=30 in Swagger.
+
+Important:
+- The workbook is synthetic and only about 120 days long.
+- Missing dates in Sales are treated as zero recorded units.
+- Campaign_Results is empty, so no causal promotion uplift can be learned from the supplied workbook.
+- Forecast demand and promotion-response estimates must be validated before business use.

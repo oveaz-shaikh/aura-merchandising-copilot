@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura | Merchandising Copilot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">A</div>
+                <div>
+                    <h2>AURA</h2>
+                    <p>MERCHANDISING COPILOT</p>
+                </div>
+            </div>
+
+            <p class="nav-heading">WORKSPACE</p>
+            <nav>
+                <button class="nav-link active" data-section="overview">▦ Overview</button>
+                <button class="nav-link" data-section="optimizer">◇ Promotion Optimizer</button>
+                <button class="nav-link" data-section="marketing">✧ Marketing Strategy</button>
+                <button class="nav-link" data-section="forecast">↗ Demand Forecast</button>
+                <button class="nav-link" data-section="deadstock">▤ Dead Stock</button>
+                <button class="nav-link" data-section="assistant">✧ AI Assistant</button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>API Connection</strong>
+                    <p id="connection-status">Checking backend...</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">RETAIL INTELLIGENCE PLATFORM</p>
+                    <h1 id="page-title">Overview</h1>
+                </div>
+                <button class="button button-secondary" id="refresh-button">
+                    ↻ Refresh Data
+                </button>
+            </header>
+
+            <div id="global-message" class="message hidden" role="status"></div>
+
+            <section id="overview-section" class="page-section">
+                <div class="welcome-panel">
+                    <div>
+                        <p class="eyebrow light">YOUR MERCHANDISING WORKSPACE</p>
+                        <h2>Make smarter retail decisions.</h2>
+                        <p>Understand inventory, evaluate promotions, and explore demand forecasts.</p>
+                    </div>
+                    <div class="welcome-symbol">A</div>
+                </div>
+
+                <div class="metric-grid">
+                    <article class="metric-card">
+                        <p>Products</p>
+                        <h2 id="metric-products">—</h2>
+                        <span>Loaded from Excel</span>
+                    </article>
+                    <article class="metric-card">
+                        <p>Total Stock Units</p>
+                        <h2 id="metric-stock">—</h2>
+                        <span>Across listed products</span>
+                    </article>
+                    <article class="metric-card">
+                        <p>Dead Stock Items</p>
+                        <h2 id="metric-deadstock">—</h2>
+                        <span>Based on API analysis</span>
+                    </article>
+                    <article class="metric-card">
+                        <p>Brands</p>
+                        <h2 id="metric-brands">—</h2>
+                        <span>Available in catalog</span>
+                    </article>
+                </div>
+
+                <div class="content-card">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Product Inventory</h2>
+                            <p>Products retrieved from your Excel-backed API.</p>
+                        </div>
+                        <input id="product-search" type="search"
+                               placeholder="Search SKU or product..." aria-label="Search products">
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Product</th>
+                                    <th>Brand</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table">
+                                <tr><td colspan="6">Loading products...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="optimizer-section" class="page-section hidden">
+                <div class="page-intro">
+                    <h2>Promotion Optimizer</h2>
+                    <p>Compare modeled promotion scenarios while respecting margin and discount limits.</p>
+                </div>
+
+                <div class="content-card">
+                    <form id="optimizer-form" class="form-grid">
+                        <label>
+                            Product SKU
+                            <select id="optimizer-sku" required>
+                                <option value="">Loading products...</option>
+                            </select>
+                        </label>
+                        <label>
+                            Clearance Deadline (days)
+                            <input id="deadline-days" type="number" min="1" max="365" value="30" required>
+                        </label>
+                        <label>
+                            Objective
+                            <select id="objective">
+                                <option value="balanced">Balanced</option>
+                                <option value="clearance">Clearance</option>
+                                <option value="profit">Profit</option>
+                            </select>
+                        </label>
+                        <label>
+                            Minimum Margin (%)
+                            <input id="minimum-margin" type="number" min="0" max="95" value="20" required>
+                        </label>
+                        <label>
+                            Maximum Discount (%)
+                            <input id="max-discount" type="number" min="0" max="80" value="30" required>
+                        </label>
+                        <div class="form-action">
+                            <button class="button button-primary" type="submit">Optimize Promotions</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="optimizer-results" class="results-area">
+                    <div class="empty-state">Choose a product and run the optimizer to see results.</div>
+                </div>
+            </section>
+
+            <section id="forecast-section" class="page-section hidden">
+                <div class="page-intro">
+                    <h2>Demand Forecast</h2>
+                    <p>Review the forecast returned by your existing forecasting API.</p>
+                </div>
+                <div class="content-card">
+                    <form id="forecast-form" class="inline-form">
+                        <label>
+                            Product SKU
+                            <select id="forecast-sku" required>
+                                <option value="">Loading products...</option>
+                            </select>
+                        </label>
+                        <label>
+                            Forecast Horizon (days)
+                            <input id="forecast-horizon" type="number" min="1" max="90" value="30" required>
+                        </label>
+                        <button class="button button-primary" type="submit">Run Forecast</button>
+                    </form>
+                </div>
+                <div id="forecast-results" class="results-area">
+                    <div class="empty-state">Select a product to review its forecast.</div>
+                </div>
+            </section>
+
+            <section id="deadstock-section" class="page-section hidden">
+                <div class="page-intro">
+                    <h2>Dead Stock Analysis</h2>
+                    <p>Identify inventory that your existing dead-stock API flags for review.</p>
+                </div>
+                <div class="content-card">
+                    <div class="section-heading">
+                        <h2>Dead Stock Report</h2>
+                        <button id="deadstock-refresh" class="button button-secondary">Load Report</button>
+                    </div>
+                    <div id="deadstock-results" class="results-area">
+                        <div class="empty-state">Click Load Report to retrieve the analysis.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="marketing-section" class="page-section hidden">
+                <div class="page-intro">
+                    <h2>AI Marketing Strategy</h2>
+                    <p>Generate a product-specific campaign plan grounded in the Excel catalog, historical sales, demand forecast, and Python promotion optimizer.</p>
+                </div>
+                <div class="content-card">
+                    <form id="marketing-form" class="form-grid">
+                        <label>
+                            Product SKU
+                            <select id="marketing-sku" required>
+                                <option value="">Loading products...</option>
+                            </select>
+                        </label>
+                        <label>
+                            Campaign Duration (days)
+                            <input id="marketing-deadline" type="number" min="1" max="365" value="30" required>
+                        </label>
+                        <label>
+                            Campaign Objective
+                            <select id="marketing-objective">
+                                <option value="balanced">Balance sales and profit</option>
+                                <option value="clearance">Clear stock quickly</option>
+                                <option value="profit">Prioritize profit</option>
+                            </select>
+                        </label>
+                        <label>
+                            Target Units (optional)
+                            <input id="marketing-target-units" type="number" min="1" placeholder="Leave blank to use available stock">
+                        </label>
+                        <div class="form-action">
+                            <button class="button button-primary" type="submit">Generate Marketing Plan</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="content-card">
+                    <h3>What the plan includes</h3>
+                    <ul>
+                        <li>Evidence-based target audience and product positioning where data supports it</li>
+                        <li>Suggested campaign ideas, channels, and a day-by-day rollout</li>
+                        <li>Discount guidance grounded in the existing Python optimizer</li>
+                        <li>KPIs to monitor, plus assumptions and data limitations</li>
+                    </ul>
+                    <p class="data-note">Marketing suggestions are recommendations only. No campaign is sent or executed. Workbook data is synthetic demo data.</p>
+                </div>
+                <div id="marketing-results" class="results-area">
+                    <div class="empty-state">Choose a product and generate a plan to see your marketing strategy.</div>
+                </div>
+            </section>
+
+            <section id="assistant-section" class="page-section hidden">
+                <div class="page-intro">
+                    <h2>AI Merchandising Assistant</h2>
+                    <p>Ask a question using the existing grounded assistant API.</p>
+                </div>
+                <div class="content-card chat-card">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="chat-bubble assistant">
+                            Hello! Ask me about products, inventory, demand, or merchandising strategies.
+                        </div>
+                    </div>
+                    <form id="chat-form" class="chat-form">
+                        <input id="chat-input" type="text" maxlength="4000"
+                               placeholder="Ask a merchandising question..." required>
+                        <button class="button button-primary" type="submit">Send</button>
+                    </form>
+                    <p class="helper-text">Answers depend on the data and guardrails implemented by your backend.</p>
+                </div>
+            </section>
+
+            <footer>
+                Aura Merchandising Copilot · Decision support prototype · Synthetic demo data
+            </footer>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
